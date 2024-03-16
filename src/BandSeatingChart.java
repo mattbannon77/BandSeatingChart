@@ -21,12 +21,13 @@ public static double [][] bandArray;
         while (numRows > MAX_ROWS){
             System.out.println("ERROR: Out of range, try again:");
             numRows = keyboard.nextInt();
+
             // While loop to ensure number of rows is greater than 0
             while (numRows <= 0){
                 System.out.println("ERROR: Out of range, try again:");
                 numRows = keyboard.nextInt();
-            } // End of the nested while loop
-        } // End of the initial while loop
+            }
+        }
 
         bandArray = new double [numRows][];
 
@@ -38,7 +39,7 @@ public static double [][] bandArray;
         for (int i = 0; i < numRows; i++){
             rowLetters[i] = currentLetter;
             currentLetter++;
-        } // End of for loop
+        }
 
         // For loop to get positions in each row
         for (int i = 0; i < numRows; i++){
@@ -51,48 +52,54 @@ public static double [][] bandArray;
             while (numPositions > MAX_POSITIONS_PER_ROW){
                 System.out.println("ERROR: Out of range, try again:");
                 numPositions = keyboard.nextInt();
-            } // End of the while loop
+            }
 
             // While loop to ensure number of positions is greater than 0
             while (numPositions < 0) {
                 System.out.println("\"ERROR: Out of range, try again:");
                 numPositions = keyboard.nextInt();
-            }// End of while loop
+            }
 
             bandArray [i] = new double [numPositions];
 
-        }//End of for loop
+        }
 //------------------------------------------------------------------------------------------------
         // While loop to keep prompting user input until the exit input is given
         boolean exit = false;
-        while (exit != true){ // condition to exit when "exit" is false
-            System.out.println("(A)dd, (R)emove, (P)rint, e(X)it: "); //print menu options
+        while (exit != true){
+            System.out.println("(A)dd, (R)emove, (P)rint, e(X)it: ");
             char answer = keyboard.next().charAt(0);
 //------------------------------------------------------------------------------------------------
             // Code for adding a person
           if (Character.toUpperCase(answer) == 'A'){
-              System.out.println("Please enter row letter:");
-              char rowLetter = keyboard.next().charAt(0);
-              rowLetter = Character.toUpperCase(rowLetter);
+              int rowIndex;
+              char rowLetter;
 
-              int rowIndex = -1;
-              for (int i = 0; i < numRows; i++) {
-                  if (rowLetters[i] == rowLetter) {
-                      rowIndex = i;
+              while (true){
+                  System.out.println("Please enter row letter:");
+                  rowLetter = keyboard.next().toUpperCase().charAt(0);
+
+                  rowIndex = -1;
+                  for (int i = 0; i < numRows; i++){
+                      if (rowLetters[i] == rowLetter){
+                          rowIndex = i;
+                          break;
+                      }
+                  }
+                  if (rowIndex != -1){
                       break;
+                  } else {
+                      System.out.println("ERROR: Out of range, try again");
                   }
               }
-              if (rowIndex == -1) {
-                  System.out.println("ERROR: Out of range, try again");
-                  rowLetter = keyboard.next().charAt(0);
-              }
-              System.out.println("Please enter position number (1 to 4):");
+
+              System.out.println("Please enter position number (1 to " + bandArray[rowIndex].length + "):");
               int position = keyboard.nextInt();
               if (position < 1 || position > 4) {
                   System.out.println("ERROR: Out of range, try again");
                   position = keyboard.nextInt();
-                  }
-              position --;
+              }
+              position--;
               if (bandArray[rowIndex][position] != 0.0) {
                   System.out.println("ERROR: There is already a musician there.");
                   continue;
@@ -100,13 +107,21 @@ public static double [][] bandArray;
               System.out.println("Please enter weight (45.0 to 200.0):");
               double weight = keyboard.nextDouble();
 
-              while (weight < 45.0 || weight > 200.0){
+              while (weight < 45.0 || weight > 200.0) {
                   System.out.println("ERROR: Out of range, try again");
                   weight = keyboard.nextDouble();
               }
-              bandArray [rowLetter - 65][position] = weight;
-              System.out.println("******Musician added");
-          } // End of the code for adding a person
+              double rowTotalWeight = 0.0;
+              for (int i = 0; i < bandArray[rowIndex].length; i++){
+                  rowTotalWeight = rowTotalWeight + bandArray[rowIndex][i];
+              }
+              if (rowTotalWeight + weight > POSITION_WEIGHT_LIMIT * bandArray[rowIndex].length) {
+                  System.out.println("ERROR: That would exceed the average weight limit");
+                  continue;
+              }
+              bandArray[rowIndex][position] = weight;
+              System.out.println("****** Musician added");
+          } // end of the code for adding a person
 //------------------------------------------------------------------------------------------------
           // Code to remove a person
           else if (Character.toUpperCase(answer) == 'R') {
@@ -125,16 +140,15 @@ public static double [][] bandArray;
                   System.out.println("ERROR: Out of range, try again");
                   continue;
               }
-              System.out.println("Please enter position number (1 to 4):");
+              System.out.println("Please enter position number (1 to " + bandArray[rowIndex].length + "):");
               int position = keyboard.nextInt();
               if (position < 1 || position > 4) {
                   System.out.println("ERROR: Out of range, try again");
-                  continue; // Restart the loop to prompt for a new input
+                  continue;
               }
               position--;
               if (bandArray[rowIndex][position] == 0.0) {
                   System.out.println("ERROR: That position is vacant.");
-                  // Restart the loop to prompt for a new action
                   continue;
               }
               bandArray[rowIndex][position] = 0.0;
@@ -156,22 +170,35 @@ public static double [][] bandArray;
             else {
                 System.out.println("ERROR: Invalid menu option, try again");
             }
-        }//end of while loop preventing exit
+        }
     } // End of the main method
     //------------------------------------------------------------------------------------------------
-    // Method to print weights
+    // Start if the printArray method
     public static void printArray (){
 
         for (int i = 0; i < bandArray.length; i++){
             System.out.print((char)(i + 65) + ":");
+
+            double total = 0.0;
+
             for (int k = 0; k < bandArray[i].length; k++){
                 System.out.print(bandArray[i][k] + " ");
+                total = total + bandArray[i][k];
 
-            } // end of the nested for loop
+            }
 
+            int numPositions = bandArray[i].length;
+            double average;
+
+            if (numPositions <= 0){
+                average = 0.0;
+            }else{
+                average = total/numPositions;
+            }
+            System.out.printf(" [%.1f, %.1f]", total, average);
             System.out.println();
 
-        } // end of the initial for loop
+        }
 
     } // end of the printArray method
 
