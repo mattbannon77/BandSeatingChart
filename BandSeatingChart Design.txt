@@ -1,0 +1,28 @@
+﻿* 1. Initialization Phase
+   * 1.1 Display welcome message and prompt user to enter number of rows as int
+      * 1.1.1 Validate input to ensure the number of rows doesn’t exceed 10
+      * 1.1.2 Display error message if number of rows is invalid
+* 2. Seating Chart Setup
+   * 2.1 Initialize bandArray based on the number of rows entered by the user
+   * 2.2 Assign each row a char value (A, B, C, etc.)
+   * 2.3 Prompt user to enter the number of positions for each row as int
+      * 2.3.1 Validate input to ensure the number of positions doesn’t exceed 8
+      * 2.3.2 Display error message if number of positions is invalid
+* 3. Main Menu Loop
+   * 3.1 While loop to display the main menu and prompt the user for an action (add, remove, print, or exit)
+      * 3.1.1 Display error message if input is invalid
+* 4. Adding a Musician
+   * 4.1 Prompt user to enter the row letter (char) and position number (int)
+      * 4.1.1 Validate input to ensure the entered row and position are valid
+      * 4.1.2 Display error message if position is occupied
+   * 4.2 Prompt user to enter weight of the musician as double
+      * 4.2.1 Validate input to ensure weight is between 45.0 and 200.0
+      * 4.2.2 Display error message if weight is invalid
+   * 4.3 Add musician’s weight to the specified position in bandArray as double
+* 5. Removing a Musician
+   * 5.1 Prompt user to enter the row letter (char) and position number (int)
+      * 5.1.1 Validate input to ensure the entered row and position are valid
+      * 5.1.2 Display error message if position is vacant
+   * 5.2 Set weight at the specified position to 0.0
+* 6. Printing the Seating Chart
+   * 6.1 Display the current arrangement of musicians row by row
